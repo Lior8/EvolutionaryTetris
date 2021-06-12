@@ -45,9 +45,9 @@ class PieceFactory:
         Calculates all possible places to drop the from.
         :param pid: Piece ID
         :return: A list of tuples. Each tuple holds the piece with its rotation, and the limit for its offset (from the
-        left side). The last legal position is in limit - 1 and not in limit.
+        left side). The last legal position is in limit.
         """
-        return [(self.pieces[pid][rid], self.width - self.pieces_sizes[pid][rid][1] + 1) for rid in
+        return [(self.pieces[pid][rid], self.width - self.pieces_sizes[pid][rid][1]) for rid in
                 range(len(self.pieces[pid]))]
 
     def calculate_piece_size(self, piece):
