@@ -27,6 +27,8 @@ class PieceFactory:
             [(3, 2), (2, 3), (3, 2), (2, 3)]  # L
         ]
 
+        self.name_pid = {'i': 0, 'o': 1, 't': 2, 's': 3, 'z': 4, 'j': 5, 'l': 6}
+
     def print_piece(self, pid, rotation):
         """
         Prints a piece
@@ -55,3 +57,7 @@ class PieceFactory:
         :return: The height and width of the piece
         """
         return len(piece), len(piece[-1])
+
+    def get_piece_by_name(self, name, rotation):
+        piece_rotations = self.pieces[self.name_pid[name.lower()]]
+        return piece_rotations[rotation % len(piece_rotations)]
