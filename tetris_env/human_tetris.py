@@ -16,7 +16,7 @@ class HumanTetris:
         self.board = tetris.create_board(height, width)
         self.pf = PieceFactory(width)
 
-    def play(self):
+    def play(self, print_features=True):
         """
         Game loop
         """
@@ -33,4 +33,5 @@ class HumanTetris:
                 print('GAME OVER')
                 break
             tetris.pretty_print_board(self.board)
-
+            if print_features:
+                print(extract_heights_and_holes(self.board))
