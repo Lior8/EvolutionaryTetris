@@ -1,4 +1,4 @@
-from bot.feature_extraction import extract_heights_and_holes
+from bot.feature_extraction import extract_features
 from tetris_env import tetris
 from tetris_env.piece_factory import PieceFactory
 
@@ -34,4 +34,4 @@ class HumanTetris:
                 break
             tetris.pretty_print_board(self.board)
             if print_features:
-                print(extract_heights_and_holes(self.board))
+                print(extract_features(self.board))
