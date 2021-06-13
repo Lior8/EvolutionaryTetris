@@ -33,7 +33,7 @@ class TetrisBot:
         while True:
             curr_pid = random.randint(0, 6)
             pieces_counter += 1
-            board = self.find_best_move(board, curr_pid)
+            board, _ = self.find_best_move(board, curr_pid)
             if board is None:
                 if with_print:
                     print('GAME OVER')
