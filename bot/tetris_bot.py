@@ -30,8 +30,9 @@ class TetrisBot:
         """
         pieces_counter = 0
         board = tetris.create_board(self.height, self.width)
+        curr_pid = random.randint(0, 6)
+        next_pid = random.randint(0, 6)
         while True:
-            curr_pid = random.randint(0, 6)
             pieces_counter += 1
             board, _ = self.find_best_move(board, curr_pid)
             if board is None:
@@ -41,6 +42,8 @@ class TetrisBot:
             if with_print:
                 tetris.pretty_print_board(board)
                 print('-' * 20)
+            curr_pid = next_pid
+            next_pid = random.randint(0, 6)
         return pieces_counter
 
     def find_best_move(self, board, pid):
