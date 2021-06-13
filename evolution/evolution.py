@@ -1,5 +1,7 @@
+import logging
 import math
 import random
+from datetime import datetime
 
 
 class EvolutionEnv:
@@ -7,8 +9,8 @@ class EvolutionEnv:
     Environment for the evolutionary algorithm
     """
 
-    def __init__(self, pop_size=100, generations=30, p_mutation=0.2, p_crossover=1, k_tournament=3, g_size=7,
-                 init_low_lim=-100, init_high_lim=100):
+    def __init__(self, pop_size=100, generations=40, p_mutation=0.2, p_crossover=1, k_tournament=3, g_size=7,
+                 init_low_lim=-100, init_high_lim=100, games_per_fitness=5, with_logging=True, with_printing=True):
         """
         :param pop_size: Population size
         :param generations: Number of generations
@@ -18,6 +20,9 @@ class EvolutionEnv:
         :param g_size: Genome size
         :param init_low_lim: Low limit for the random values in the initial population
         :param init_high_lim: High limit for the random values in the initial population
+        :param games_per_fitness: Number of games run to calculate the fitness
+        :param with_logging: Should we log the run
+        :param with_printing: Print info to screen (not same info as logging)
         """
         self.pop_size = pop_size
         self.generations = generations
@@ -25,18 +30,39 @@ class EvolutionEnv:
         self.p_crossover = p_crossover
         self.k = k_tournament
         self.g_size = g_size
+        self.games_per_fitness = games_per_fitness
+        self.with_logging = with_logging
+        self.with_printing = with_printing
+        self.logger = self.init_logging()
         self.population = [[random.randint(init_low_lim, init_high_lim) for _ in range(g_size)] for _ in
                            range(pop_size)]
         self.fitnesses = []
+
+    def init_logging(self):
+        logging.basicConfig(level=logging.DEBUG)
+        logger = logging.getLogger(__name__)
+        logger.propagate = False
+
+        if self.with_logging:
+            file_name = f'logs\\Run Log {datetime.now().strftime("%Y %m %d %H %M %S")}.log'
+            f_handler = logging.FileHandler(file_name)
+            f_handler.setLevel(logging.DEBUG)
+            l_format = logging.Formatter('%(message)s')
+            f_handler.setFormatter(l_format)
+            logger.addHandler(f_handler)
+        return logger
 
     def evolve(self):
         """
         Performs the evolutionary algorithm
         """
-        for _ in range(self.generations):
+        for i in range(self.generations):
+            self.logger.debug(f'Generation {i}')
+            if self.with_printing:
+                print(f'Generation {i}')
+            self.calc_pop_fitness()
             new_population = []
             for _ in range(self.pop_size // 2):
-                self.calc_pop_fitness()
                 # Select parents
                 p1 = self.tournament()
                 p2 = self.tournament()
@@ -46,21 +72,12 @@ class EvolutionEnv:
                 new_population.append(self.mutation(c1))
                 new_population.append(self.mutation(c2))
             self.population = new_population
-            print(sum(self.fitnesses) / self.pop_size)
 
     def calc_pop_fitness(self):
         """
         Calculates the fitnesses of the entire population
         """
         self.fitnesses = [self.calc_fitness(indv) for indv in self.population]
-
-    def calc_fitness(self, g):
-        """
-        Calculates the fitness of a given genome
-        :param g: The individual/genome
-        :return: The fitness value
-        """
-        return -sum(g)  # Placeholder function for now
 
     def tournament(self):
         """
@@ -99,3 +116,25 @@ class EvolutionEnv:
             if random.uniform(0, 1) < self.p_mutation:
                 g[i] *= random.gauss(1, 0.5)
         return g
+
+    def calc_fitness(self, g):
+        """
+        Calculates the fitness of a given genome
+        :param g: The individual/genome
+        :return: The fitness value
+        """
+        self.logger.debug(f'G: {g}')
+        score = 0
+        for i in range(self.games_per_fitness):
+            game_score = self.play_game(g)
+            self.logger.debug(f'T{i}: {game_score}')
+            score += game_score
+        return score / self.games_per_fitness
+
+    def play_game(self, g):
+        """
+        Plays a single game of Tetris given the genome
+        :param g: The genome
+        :return: The number of pieces dropped in the game
+        """
+        return -sum(g)  # Dummy function for now
