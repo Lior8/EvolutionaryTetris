@@ -3,6 +3,8 @@ import math
 import random
 from datetime import datetime
 
+from bot.tetris_bot import TetrisBot
+
 
 class EvolutionEnv:
     """
@@ -10,7 +12,8 @@ class EvolutionEnv:
     """
 
     def __init__(self, pop_size=100, generations=40, p_mutation=0.2, p_crossover=1, k_tournament=3, g_size=7,
-                 init_low_lim=-100, init_high_lim=100, games_per_fitness=5, with_logging=True, with_printing=True):
+                 init_low_lim=-100, init_high_lim=100, games_per_fitness=5, board_height=12, board_width=6,
+                 with_logging=True, with_printing=True):
         """
         :param pop_size: Population size
         :param generations: Number of generations
@@ -21,6 +24,8 @@ class EvolutionEnv:
         :param init_low_lim: Low limit for the random values in the initial population
         :param init_high_lim: High limit for the random values in the initial population
         :param games_per_fitness: Number of games run to calculate the fitness
+        :param board_height: Board's height
+        :param board_width: Board's width
         :param with_logging: Should we log the run
         :param with_printing: Print info to screen (not same info as logging)
         """
@@ -31,6 +36,8 @@ class EvolutionEnv:
         self.k = k_tournament
         self.g_size = g_size
         self.games_per_fitness = games_per_fitness
+        self.board_height = board_height
+        self.board_width = board_width
         self.with_logging = with_logging
         self.with_printing = with_printing
         self.logger = self.init_logging()
@@ -77,7 +84,10 @@ class EvolutionEnv:
         """
         Calculates the fitnesses of the entire population
         """
-        self.fitnesses = [self.calc_fitness(indv) for indv in self.population]
+        self.fitnesses = []
+        for i in range(self.pop_size):
+            print(f'Genome {i}')
+            self.fitnesses.append(self.calc_fitness(self.population[i]))
 
     def tournament(self):
         """
@@ -137,4 +147,5 @@ class EvolutionEnv:
         :param g: The genome
         :return: The number of pieces dropped in the game
         """
-        return -sum(g)  # Dummy function for now
+        bot = TetrisBot(self.board_height, self.board_width, g)
+        return bot.play_game(with_print=False)
