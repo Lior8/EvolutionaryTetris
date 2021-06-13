@@ -20,7 +20,7 @@ class HumanTetris:
         """
         Game loop
         """
-        tetris.print_board(self.board)
+        tetris.pretty_print_board(self.board)
         while True:
             # Insert data as "piece_number num_of_rotations offset from the left"
             pid, rid, col_offset = map(int, input().split())
