@@ -38,6 +38,17 @@ def print_board(board, with_hidden_lines=False):
         print(board[i])
 
 
+def pretty_print_board(board, with_color=True, with_hidden_lines=False):
+    colstart = ['\33[96m', '\33[93m', '\33[95m', '\33[92m', '\33[91m', '\33[94m', '\33[97m']
+    for i in range(0 if with_hidden_lines else 4, len(board)):
+        for val in board[i]:
+            if with_color:
+                print(colstart[val - 1] + '\u25A0\33[0m ' if val > 0 else '\u25A1 ', end='')
+            else:
+                print('\u25A0 ' if val > 0 else '\u25A1 ', end='')
+        print()
+
+
 def drop_piece(piece, col_offset, board):
     """
     Drops the piece from the column offset.

@@ -1,3 +1,4 @@
+from bot.feature_extraction import extract_heights_and_holes
 from tetris_env import tetris
 from tetris_env.piece_factory import PieceFactory
 
@@ -31,4 +32,5 @@ class HumanTetris:
             if tetris.drop_piece(piece, col_offset, self.board):
                 print('GAME OVER')
                 break
-            tetris.print_board(self.board)
+            tetris.pretty_print_board(self.board)
+
