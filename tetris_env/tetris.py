@@ -39,6 +39,12 @@ def print_board(board, with_hidden_lines=False):
 
 
 def pretty_print_board(board, with_color=True, with_hidden_lines=False):
+    """
+    Pretty prints the board
+    :param board: The game board
+    :param with_color: Should the squares be colored
+    :param with_hidden_lines: Should the hidden lines be printed
+    """
     colstart = ['\33[96m', '\33[93m', '\33[95m', '\33[92m', '\33[91m', '\33[94m', '\33[97m']
     for i in range(0 if with_hidden_lines else 4, len(board)):
         for val in board[i]:

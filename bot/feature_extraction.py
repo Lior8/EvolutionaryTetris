@@ -1,4 +1,14 @@
 def extract_heights_and_holes(board):
+    """
+    Calculates the:
+    Max height - Highest non-empty column (height is the tallest non-empty block)
+    Cumulative height - sum of the height of each column
+    Relative height - difference between the highest and lowest columns
+    Holes - Hole is defined as an empty block with non-empty block somewhere above it in the column
+    Roughness - Difference between each column and its right neighbor
+    :param board: The game board
+    :return: Feature vector
+    """
     board_height = len(board)
     board_width = len(board[0])
     heights = [-1] * board_width
